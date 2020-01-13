@@ -1,4 +1,4 @@
-package com.androidavanzado.minitwitter.ui;
+package com.androidavanzado.minitwitter.ui.auth;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -14,30 +14,32 @@ import com.androidavanzado.minitwitter.common.Constantes;
 import com.androidavanzado.minitwitter.common.SharedPreferencesManager;
 import com.androidavanzado.minitwitter.retrofit.MiniTwitterClient;
 import com.androidavanzado.minitwitter.retrofit.MiniTwitterService;
-import com.androidavanzado.minitwitter.retrofit.request.RequestSignup;
+import com.androidavanzado.minitwitter.retrofit.request.RequestLogin;
 import com.androidavanzado.minitwitter.retrofit.response.ResponseAuth;
+import com.androidavanzado.minitwitter.ui.DashboardActivity;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
-    Button btnSignUp;
-    TextView tvGoLogin;
-    EditText etUsername, etEmail, etPassword;
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    Button btnLogin;
+    TextView tvGoSignUp;
+    EditText etEmail, etPassword;
     MiniTwitterClient miniTwitterClient;
     MiniTwitterService miniTwitterService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up);
+        setContentView(R.layout.activity_main);
 
         getSupportActionBar().hide();
 
         retrofitInit();
         findViews();
         events();
+
     }
 
     private void retrofitInit() {
@@ -46,16 +48,15 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void findViews() {
-        btnSignUp = findViewById(R.id.buttonSignUp);
-        tvGoLogin = findViewById(R.id.textViewGoLogin);
-        etUsername = findViewById(R.id.editTextUsername);
+        btnLogin = findViewById(R.id.buttonLogin);
+        tvGoSignUp = findViewById(R.id.textViewGoSignUp);
         etEmail = findViewById(R.id.editTextEmail);
         etPassword = findViewById(R.id.editTextPassword);
     }
 
     private void events() {
-        btnSignUp.setOnClickListener(this);
-        tvGoLogin.setOnClickListener(this);
+        btnLogin.setOnClickListener(this);
+        tvGoSignUp.setOnClickListener(this);
     }
 
     @Override
@@ -63,35 +64,33 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         int id = v.getId();
 
         switch (id) {
-            case R.id.buttonSignUp:
-                goToSignUp();
-                break;
-            case R.id.textViewGoLogin:
+            case R.id.buttonLogin:
                 goToLogin();
+                break;
+            case R.id.textViewGoSignUp:
+                goToSignUp();
                 break;
         }
     }
 
-    private void goToSignUp() {
-        String username = etUsername.getText().toString();
+    private void goToLogin() {
         String email = etEmail.getText().toString();
         String password = etPassword.getText().toString();
 
-        if(username.isEmpty()) {
-            etUsername.setError("El nombre de usuario es requerido");
-        } else if(email.isEmpty()) {
+        if(email.isEmpty()) {
             etEmail.setError("El email es requerido");
-        } else if(password.isEmpty() || password.length()<4) {
-            etPassword.setError("La contraseña es requerida y debe tener al menos 4 caracteres");
+        } else if(password.isEmpty()) {
+            etPassword.setError("La contraseña es requerida");
         } else {
-            String code = "UDEMYANDROID";
-            RequestSignup requestSignup = new RequestSignup(username, email, password, code);
-            Call<ResponseAuth> call = miniTwitterService.doSignUp(requestSignup);
+            RequestLogin requestLogin = new RequestLogin(email, password);
+
+            Call<ResponseAuth> call = miniTwitterService.doLogin(requestLogin);
 
             call.enqueue(new Callback<ResponseAuth>() {
                 @Override
                 public void onResponse(Call<ResponseAuth> call, Response<ResponseAuth> response) {
-                    if (response.isSuccessful()) {
+                    if(response.isSuccessful()) {
+                        Toast.makeText(MainActivity.this, "Sesión iniciada correctamente", Toast.LENGTH_SHORT).show();
 
                         SharedPreferencesManager.setSomeStringValue(Constantes.PREF_TOKEN, response.body().getToken());
                         SharedPreferencesManager.setSomeStringValue(Constantes.PREF_USERNAME, response.body().getUsername());
@@ -100,26 +99,28 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         SharedPreferencesManager.setSomeStringValue(Constantes.PREF_CREATED, response.body().getCreated());
                         SharedPreferencesManager.setSomeBooleanValue(Constantes.PREF_ACTIVE, response.body().getActive());
 
-                        Intent i = new Intent(SignUpActivity.this, DashboardActivity.class);
-                        startActivity(i);
-                        finish();
+
+                        Intent i = new Intent(MainActivity.this, DashboardActivity.class);
+                            startActivity(i);
+                            // Destruimos este Activity para que no se pueda volver.
+                            finish();
                     } else {
-                        Toast.makeText(SignUpActivity.this, "Algo ha ido mal, revise los datos de registro", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Algo fue mal, revise sus datos de acceso", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ResponseAuth> call, Throwable t) {
-                    Toast.makeText(SignUpActivity.this, "Error en la conexión. Inténtelo de nuevo.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Problemas de conexión. Inténtelo de nuevo", Toast.LENGTH_SHORT).show();
                 }
             });
+
         }
     }
 
-    private void goToLogin() {
-        Intent i = new Intent(SignUpActivity.this, MainActivity.class);
+    private void goToSignUp() {
+        Intent i = new Intent(MainActivity.this, SignUpActivity.class);
         startActivity(i);
         finish();
     }
-
 }

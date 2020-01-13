@@ -3,6 +3,7 @@
     package="com.androidavanzado.minitwitter">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name="com.androidavanzado.minitwitter.common.MyApp"
@@ -15,8 +16,8 @@
         <activity
             android:name="com.androidavanzado.minitwitter.ui.DashboardActivity"
             android:label="@string/title_activity_dashboard" />
-        <activity android:name="com.androidavanzado.minitwitter.ui.SignUpActivity" />
-        <activity android:name="com.androidavanzado.minitwitter.ui.MainActivity">
+        <activity android:name="com.androidavanzado.minitwitter.ui.auth.SignUpActivity" />
+        <activity android:name="com.androidavanzado.minitwitter.ui.auth.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

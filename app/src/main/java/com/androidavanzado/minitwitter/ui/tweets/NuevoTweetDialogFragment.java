@@ -1,4 +1,4 @@
-package com.androidavanzado.minitwitter.ui;
+package com.androidavanzado.minitwitter.ui.tweets;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;

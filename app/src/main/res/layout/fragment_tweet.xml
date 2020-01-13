@@ -2,23 +2,28 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/padd"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="16dp">
+    android:orientation="horizontal">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/imageViewAvatar"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:paddingStart="8dp"
-        android:paddingLeft="8dp"
-        android:paddingEnd="8dp"
-        android:paddingRight="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/ic_logo_minituiter_mini" />
+    <ImageView
+        android:id="@+id/imageViewLike"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@+id/textViewMessage"
+        app:layout_constraintTop_toBottomOf="@+id/textViewMessage"
+        app:srcCompat="@drawable/ic_like" />
+
+    <ImageView
+        android:id="@+id/imageViewShowMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textViewUsername"
+        app:srcCompat="@drawable/ic_keyboard_arrow_down_gris_24dp" />
 
     <TextView
         android:id="@+id/textViewUsername"
@@ -33,26 +38,6 @@
         app:layout_constraintTop_toTopOf="@+id/imageViewAvatar" />
 
     <TextView
-        android:id="@+id/textViewMessage"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/textViewUsername"
-        app:layout_constraintTop_toBottomOf="@+id/textViewUsername" />
-
-    <ImageView
-        android:id="@+id/imageViewLike"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="@+id/textViewMessage"
-        app:layout_constraintTop_toBottomOf="@+id/textViewMessage"
-        app:srcCompat="@drawable/ic_like" />
-
-    <TextView
         android:id="@+id/textViewLikes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -62,4 +47,40 @@
         app:layout_constraintBottom_toBottomOf="@+id/imageViewLike"
         app:layout_constraintStart_toEndOf="@+id/imageViewLike"
         app:layout_constraintTop_toTopOf="@+id/imageViewLike" />
+
+    <TextView
+        android:id="@+id/textViewMessage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/textViewUsername"
+        app:layout_constraintTop_toBottomOf="@+id/textViewUsername" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:background="#DDDDDD"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewLike" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imageViewAvatar"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:paddingStart="8dp"
+        android:paddingLeft="8dp"
+        android:paddingEnd="8dp"
+        android:paddingRight="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/ic_logo_minituiter_mini" />
 </android.support.constraint.ConstraintLayout>

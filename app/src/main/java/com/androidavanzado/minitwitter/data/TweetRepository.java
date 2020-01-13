@@ -12,6 +12,7 @@ import com.androidavanzado.minitwitter.retrofit.AuthTwitterService;
 import com.androidavanzado.minitwitter.retrofit.request.RequestCreateTweet;
 import com.androidavanzado.minitwitter.retrofit.response.Like;
 import com.androidavanzado.minitwitter.retrofit.response.Tweet;
+import com.androidavanzado.minitwitter.retrofit.response.TweetDeleted;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -108,6 +109,34 @@ public class TweetRepository {
 
             @Override
             public void onFailure(Call<Tweet> call, Throwable t) {
+                Toast.makeText(MyApp.getContext(), "Error en la conexión. Inténtelo de nuevo.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void deleteTweet(final int idTweet) {
+        Call<TweetDeleted> call = authTwitterService.deleteTweet(idTweet);
+
+        call.enqueue(new Callback<TweetDeleted>() {
+            @Override
+            public void onResponse(Call<TweetDeleted> call, Response<TweetDeleted> response) {
+                if (response.isSuccessful()) {
+                    // creams lista clonadas
+                    List<Tweet> cloneTweets = new ArrayList<>();
+                    for (int i = 0; i < allTweets.getValue().size(); i ++) {
+                        if (allTweets.getValue().get(i).getId() != idTweet) {
+                            cloneTweets.add(new Tweet(allTweets.getValue().get(i)));
+                        }
+                    }
+                    allTweets.setValue(cloneTweets);
+                    getFavsTweets();
+                } else {
+                    Toast.makeText(MyApp.getContext(), "Algo ha ido mal, inténtelo de nuevo", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TweetDeleted> call, Throwable t) {
                 Toast.makeText(MyApp.getContext(), "Error en la conexión. Inténtelo de nuevo.", Toast.LENGTH_SHORT).show();
             }
         });
